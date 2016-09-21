@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ol class="breadcrumb">
+  <li><a href="/by-system/"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a></li>
+</ol>
+
+
+<ul>
+    {% for system in systems %}
+    <li><a href="{{system.name}}">{{system}}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

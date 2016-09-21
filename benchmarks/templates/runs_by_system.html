@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ol class="breadcrumb">
+  <li><a href="/by-system/"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a></li>
+  <li class="active">{{system_name}}</li>
+</ol>
+
+
+{% regroup runs by task as run_groups %}
+
+
+{% for run_group in run_groups %}
+<div class="panel panel-default">
+    <div class="panel-heading">{{run_group.grouper.model.get_name}}/{{run_group.grouper.name}}</div>
+    {% with run_group.list|first as run0 %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date/time</th>
+                <th>Job id</th>
+                {% for measure in run0.measure_set.all %}
+                <th>{{measure.name}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for run in run_group.list %}
+            <tr>
+                <td>{{run.timestamp}}</td>
+                <td><a href="https://www.hbpneuromorphic.eu/app/index.html#/queue/{{run.nmpi_id}}">{{run.nmpi_id}}</a></td>
+                {% for measure in run.measure_set.all %}
+                <td>{{measure.value}} {{measure.units}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endwith %}
+</div>
+{% endfor %}
+
+{% endblock %}

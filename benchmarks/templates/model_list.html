@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ol class="breadcrumb">
+  <li><a href="/by-task/"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span></a></li>
+</ol>
+
+
+<ul class="list-group">
+    {% for model in models %}
+    <li class="list-group-item"><a href="{{model.name}}">{{model.name}}</a> {% if "http" in model.repository.url %}<a class="pull-right" href="{{model.repository}}"><span class="label label-default">{% if "github" in model.repository.url %}<i class="fa fa-github"></i>{% endif %} Get the code</span></a>{% endif %}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

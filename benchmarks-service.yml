@@ -1,0 +1,7 @@
+image: cnrsunic/neuromorphic_benchmarks_service
+ports:
+    443: 443
+env: [DEBUG,
+      NMBS_DATABASE_HOST,
+      NMBS_DATABASE_PORT]
+volumes: ["/etc/letsencrypt"]

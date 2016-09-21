@@ -1,0 +1,267 @@
+[
+{
+  "fields": {
+    "version": "20151016",
+    "name": "BrainScaleS"
+  },
+  "model": "benchmarks.system",
+  "pk": 1
+},
+{
+  "fields": {
+    "version": "LittleRascal",
+    "name": "SpiNNaker"
+  },
+  "model": "benchmarks.system",
+  "pk": 2
+},
+{
+  "fields": {
+    "version": "2.2.2",
+    "name": "NEST"
+  },
+  "model": "benchmarks.system",
+  "pk": 3
+},
+{
+  "fields": {
+    "url": "https://github.com/CNRS-UNIC/hardware-benchmarks.git"
+  },
+  "model": "benchmarks.repository",
+  "pk": 1
+},
+{
+  "fields": {
+    "url": "git@gitviz.kip.uni-heidelberg.de:hbp-sp9-benchmark-model-kthl23.git"
+  },
+  "model": "benchmarks.repository",
+  "pk": 2
+},
+{
+  "fields": {
+    "url": "git@gitviz.kip.uni-heidelberg.de:hbp-sp9-benchmark-model-neuralsampling.git"
+  },
+  "model": "benchmarks.repository",
+  "pk": 3
+},
+{
+  "fields": {
+    "url": "git@gitviz.kip.uni-heidelberg.de:hbp-sp9-benchmark-model-multivariate.git"
+  },
+  "model": "benchmarks.repository",
+  "pk": 4
+},
+{
+  "fields": {
+    "url": "git@gitviz.kip.uni-heidelberg.de:hbp-sp9-benchmark-model-june.git"
+  },
+  "model": "benchmarks.repository",
+  "pk": 5
+},
+{
+  "fields": {
+    "name": "IF_cond_exp",
+    "repository": 1,
+    "description": "A population of IF neurons, each of which is injected with a different current"
+  },
+  "model": "benchmarks.networkmodel",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "SpikeSourcePoisson",
+    "repository": 1,
+    "description": "A population of random spike sources, each with different firing rates"
+  },
+  "model": "benchmarks.networkmodel",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "l23_attractor_memory",
+    "repository": 2,
+    "description": "L2/3 attractor memory network"
+  },
+  "model": "benchmarks.networkmodel",
+  "pk": 3
+},
+{
+  "fields": {
+    "name": "neural_sampling",
+    "repository": 3,
+    "description": "Neural sampling Boltzmann machine (Buesing et al 2011)"
+  },
+  "model": "benchmarks.networkmodel",
+  "pk": 4
+},
+{
+  "fields": {
+    "name": "multivariate_classifier",
+    "repository": 4,
+    "description": "Generic network for classification of multivariate data"
+  },
+  "model": "benchmarks.networkmodel",
+  "pk": 5
+},
+{
+  "fields": {
+    "name": "june",
+    "repository": 5,
+    "description": "Multi-layer microcircuit model of early sensory cortex (Potjans and Diesmann, 2014)"
+  },
+  "model": "benchmarks.networkmodel",
+  "pk": 6
+},
+{
+  "fields": {
+    "model": 1,
+    "command": "run_IF_curve.py {system}",
+    "name": "I_f_curve"
+  },
+  "model": "benchmarks.task",
+  "pk": 1
+},
+{
+  "fields": {
+    "model": 2,
+    "command": "run_spike_train_statistics.py {system}",
+    "name": "run20s"
+  },
+  "model": "benchmarks.task",
+  "pk": 2
+},
+{
+  "fields": {
+    "model": 5,
+    "command": "python run_mnist_classifier.py {system}",
+    "name": "mnist_classifier"
+  },
+  "model": "benchmarks.task",
+  "pk": 3
+},
+{
+  "fields": {
+    "model": 5,
+    "command": "python run_alnet_transfer_functions.py {system}",
+    "name": "alnet_transfer_function_variability"
+  },
+  "model": "benchmarks.task",
+  "pk": 4
+},
+{
+  "fields": {
+    "timestamp": "2015-10-16T20:28:57.394Z",
+    "task": 1,
+    "system": 2,
+    "nmpi_id": 19005
+  },
+  "model": "benchmarks.run",
+  "pk": 1
+},
+{
+  "fields": {
+    "timestamp": "2015-10-16T20:28:57.394Z",
+    "task": 2,
+    "system": 2,
+    "nmpi_id": 19005
+  },
+  "model": "benchmarks.run",
+  "pk": 2
+},
+{
+  "fields": {
+    "run": 1,
+    "name": "norm_diff_frequency",
+    "metric": "quality",
+    "value": 0.138644834485,
+    "units": "",
+    "type": "norm"
+  },
+  "model": "benchmarks.measure",
+  "pk": 1
+},
+{
+  "fields": {
+    "run": 1,
+    "name": "setup_time",
+    "metric": "performance",
+    "value": 0.00261521339417,
+    "units": "s",
+    "type": "time"
+  },
+  "model": "benchmarks.measure",
+  "pk": 2
+},
+{
+  "fields": {
+    "run": 1,
+    "name": "run_time",
+    "metric": "performance",
+    "value": 118.025867939,
+    "units": "s",
+    "type": "time"
+  },
+  "model": "benchmarks.measure",
+  "pk": 3
+},
+{
+  "fields": {
+    "run": 1,
+    "name": "closing_time",
+    "metric": "performance",
+    "value": 1.48614692688,
+    "units": "",
+    "type": "time"
+  },
+  "model": "benchmarks.measure",
+  "pk": 4
+},
+{
+  "fields": {
+    "run": 2,
+    "name": "kolmogorov_smirnov",
+    "metric": "quality",
+    "value": 0.0480139193698,
+    "units": "",
+    "type": "min-p-value"
+  },
+  "model": "benchmarks.measure",
+  "pk": 5
+},
+{
+  "fields": {
+    "run": 2,
+    "name": "setup_time",
+    "metric": "performance",
+    "value": 0.0029149055481,
+    "units": "s",
+    "type": "time"
+  },
+  "model": "benchmarks.measure",
+  "pk": 6
+},
+{
+  "fields": {
+    "run": 2,
+    "name": "run_time",
+    "metric": "performance",
+    "value": 2018.59665704,
+    "units": "s",
+    "type": "time"
+  },
+  "model": "benchmarks.measure",
+  "pk": 7
+},
+{
+  "fields": {
+    "run": 2,
+    "name": "closing_time",
+    "metric": "performance",
+    "value": 8.26906108856,
+    "units": "s",
+    "type": "time"
+  },
+  "model": "benchmarks.measure",
+  "pk": 8
+}
+]

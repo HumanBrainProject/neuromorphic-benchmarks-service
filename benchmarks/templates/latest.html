@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ol class="breadcrumb">
+  <li><span class="glyphicon glyphicon-time" aria-hidden="true"></span></li>
+  <li class="active">Latest results</li>
+</ol>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Repository</th>
+            <th>Model</th>
+            <th>Task</th>
+            <th>Measurement</th>
+            {% for system in systems %}
+            <th>{{system.name}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for repos_url, repos_data in data.items %}
+        {% for model in repos_data.models %}
+            {% for task in model.tasks %}
+                {% for measure in task.measures %}
+        <tr>
+            {% if forloop.first and forloop.parentloop.first and forloop.parentloop.parentloop.first %}
+            <td rowspan="{{repos_data.nrows}}">{{repos_url}}</td>
+            {% endif %}
+            {% if forloop.first and forloop.parentloop.first %}
+            <td rowspan="{{model.nrows}}">{{model.name}}</td>
+            {% endif %}
+            {% if forloop.first %}
+            <td rowspan="{{task.nrows}}">{{task.name}}</td>
+            {% endif %}
+            <td>{{measure.name}}</td>
+                    {% for quantity in measure.values %}
+            <td>{{quantity.value}} {{quantity.units}}</td>
+                    {% endfor %}
+        </tr>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ol class="breadcrumb">
+  <li><a href="/by-task/"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span></a></li>
+  <li><a href="/by-task/{{task.model.name}}">{{task.model.name}}</a></li>
+  <li class="active">{{task.name}}</li>
+</ol>
+
+{% for task_label in datasets %}
+<h3>{{task_label}}</h3>
+<div id="chart_{{task_label}}"></div>
+{% endfor %}
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+{% for task_label, dataset in datasets.items %}
+var chart_{{task_label}} = c3.generate({
+    bindto: '#chart_{{task_label}}',
+    data: {
+        xFormat: '%Y-%m-%dT%H:%M',
+        xs: {
+            {% for timeseries in dataset.timeseries.values %}
+            '{{timeseries.label}}': 'x{{forloop.counter}}',
+            {% endfor %}
+        },
+        columns: [
+            {% for timeseries in dataset.timeseries.values %}
+            ['x{{forloop.counter}}', '{{timeseries.times|join:"', '"}}'],
+            ['{{timeseries.label}}', '{{timeseries.values|join:"', '"}}'],
+            {% endfor %}
+        ]
+    },
+    axis: {
+        x: {
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+        },
+        y: {
+            label: {
+                text: '{{dataset.type}}{% if dataset.units %} ({{dataset.units}}){% endif %}',
+                position: 'outer-middle',
+            }
+        }
+    },
+    legend: {
+        position: 'right'
+    }
+});
+{% endfor %}
+</script>
+{% endblock %}

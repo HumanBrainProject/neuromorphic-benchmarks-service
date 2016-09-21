@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ol class="breadcrumb">
+  <li><a href="/by-task/"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span></a></li>
+  <li class="active">{{model.name}}</li>
+</ol>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Model description</h3>
+  </div>
+  <div class="panel-body">
+    {{model.description}} {% if "http" in model.repository.url %}<a class="btn btn-default pull-right" role="button" href="{{model.repository}}">{% if "github" in model.repository.url %}<i class="fa fa-github fa-2x"></i>{% endif %} Get the code</a>{% endif %}
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Tasks</h3>
+  </div>
+  <ul class="list-group">
+    {% for task in model.task_set.all %}
+    <li class="list-group-item"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> <a href="{{task.name}}/">{{task.name}}</a></li>
+    {% endfor %}
+  </ul>
+
+</div>
+
+{% endblock %}
