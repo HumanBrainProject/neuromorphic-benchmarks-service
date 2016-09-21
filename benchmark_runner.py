@@ -14,8 +14,7 @@ import requests
 BENCHMARKS_SERVER = "https://benchmarks.hbpneuromorphic.eu"
 
 
-job_manager = nmpi.Client("testuser123",
-                          password="uw3-amo-aJd-Fko")
+job_manager = nmpi.Client("testuser123")
 
 repositories = (
     "https://github.com/CNRS-UNIC/hardware-benchmarks.git",
