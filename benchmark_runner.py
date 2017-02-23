@@ -1,30 +1,35 @@
 """
-
+A script for running neuromorphic benchmarks
 
 """
 
 from time import sleep
+import os
 from os.path import splitext, join
 from urlparse import urlparse
 from urllib import urlopen
 import json
+import tempfile
+import shutil
+from sh import git
 import nmpi
 import requests
 
 BENCHMARKS_SERVER = "https://benchmarks.hbpneuromorphic.eu"
 
 
-job_manager = nmpi.Client("testuser123")
+job_manager = nmpi.Client("testuser123",
+                          password=os.environ["BENCHMARK_RUNNER_PASSWORD"])
 
 repositories = (
     "https://github.com/CNRS-UNIC/hardware-benchmarks.git",
+    "https://github.com/apdavison/pynam.git",
 )
 
 
 def main(platform):
     for repository in repositories:
-        code_dir = update_repository(repository)
-        models = get_models(code_dir)
+        models = get_models(repository)
         for model in models:
             for task in model["tasks"]:
                 job = run_job(repository, task, platform)
@@ -32,13 +37,12 @@ def main(platform):
                 save_results(model, task, results, job)
 
 
-def update_repository(repository):
-    return "/Users/andrew/dev/hardware_benchmarks"
-
-
-def get_models(code_dir):
-    with open(join(code_dir, "benchmarks.json")) as fp:
+def get_models(repository):
+    tmpdir = tempfile.mkdtemp()
+    git.clone(repository, tmpdir)
+    with open(join(tmpdir, "benchmarks.json")) as fp:
         models = json.load(fp)
+    shutil.rmtree(tmpdir)
     return models
 
 
@@ -63,7 +67,8 @@ def get_results(job):
             fp.close()
             if "results" in data:
                 return data["results"]
-    raise Exception("No results file found.")
+    # add a warning that there are no results
+    return []
 
 
 system_name_map = {
