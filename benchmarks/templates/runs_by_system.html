@@ -28,7 +28,7 @@
         {% for run in run_group.list %}
             <tr>
                 <td>{{run.timestamp}}</td>
-                <td><a href="https://www.hbpneuromorphic.eu/app/index.html#/queue/{{run.nmpi_id}}">{{run.nmpi_id}}</a></td>
+                <td><a href="https://collab.humanbrainproject.eu/#/collab/510/nav/5208?state=job.{{run.nmpi_id}}">{{run.nmpi_id}}</a></td>
                 {% for measure in run.measure_set.all %}
                 <td>{{measure.value}} {{measure.units}}</td>
                 {% endfor %}

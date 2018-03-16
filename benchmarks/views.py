@@ -93,7 +93,9 @@ class RunListResource(generic.View):
         for result in data["results"]:
             try:
                 m = Measure(run=run, value=result["value"], units=result.get("units", ""),
-                            metric=result["type"], type=result["measure"], name=result["name"])
+                            metric=result["type"], type=result["measure"], name=result["name"],
+                            std_dev=result.get("std_dev", None),
+                            min=result.get("min", None), max=result.get("max", None))
             except KeyError as err:
                 raise ResultFormatError("Missing field in results: {}".format(err.message))
             m.save()

@@ -50,6 +50,7 @@ class RunResourceTest(BaseTestCase):
                     "type": "performance",
                     "name": "setup_time",
                     "value": 0.026206016540527344,
+                    "std_dev": 0.0032452,
                     "units": "s",
                     "measure": "time"
                 },
@@ -57,6 +58,8 @@ class RunResourceTest(BaseTestCase):
                     "type": "performance",
                     "name": "run_time",
                     "value": 1.419724941253662,
+                    "min": 1.34352,
+                    "max": 1.56366,
                     "units": "s",
                     "measure": "time"
                 },

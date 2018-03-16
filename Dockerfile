@@ -10,7 +10,7 @@
 # To find out which port to access on the host machine, run "docker ps"
 #
 
-FROM debian:jessie
+FROM debian:stretch-slim
 MAINTAINER Andrew Davison <andrew.davison@unic.cnrs-gif.fr>
 
 ENV DEBIAN_FRONTEND noninteractive

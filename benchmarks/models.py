@@ -55,6 +55,9 @@ class Measure(models.Model):
     name = models.CharField(max_length=100)
     value = models.FloatField()
     units = models.CharField(max_length=20, blank=True)
+    std_dev = models.FloatField(null=True, blank=True, default=None)
+    min = models.FloatField(null=True, blank=True, default=None)
+    max = models.FloatField(null=True, blank=True, default=None)
     metric = models.CharField(max_length=50,
                               help_text='e.g. "quality", "performance", "energy consumption"')
     type = models.CharField(max_length=50,
