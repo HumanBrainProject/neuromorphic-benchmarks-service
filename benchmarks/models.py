@@ -21,7 +21,7 @@ class Repository(models.Model):
 
 
 class NetworkModel(models.Model):
-    repository = models.ForeignKey(Repository)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
     description = models.TextField()
 
@@ -33,7 +33,7 @@ class NetworkModel(models.Model):
 
 
 class Task(models.Model):
-    model = models.ForeignKey(NetworkModel)
+    model = models.ForeignKey(NetworkModel, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
     command = models.CharField(max_length=500)
 
@@ -42,10 +42,10 @@ class Task(models.Model):
 
 
 class Run(models.Model):
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
     nmpi_id = models.PositiveIntegerField()
-    system = models.ForeignKey(System)
+    system = models.ForeignKey(System, on_delete=models.CASCADE)
 
     def __str__(self):
         return "{}/{}/{}".format(self.task, self.system, self.nmpi_id)
@@ -62,7 +62,7 @@ class Measure(models.Model):
                               help_text='e.g. "quality", "performance", "energy consumption"')
     type = models.CharField(max_length=50,
                             help_text='the type of the measurement, for example "norm", "p-value", "time".')
-    run = models.ForeignKey(Run)
+    run = models.ForeignKey(Run, on_delete=models.CASCADE)
 
     def __str__(self):
         return "{}#{}={}{}".format(self.run, self.name, self.value, self.units)
