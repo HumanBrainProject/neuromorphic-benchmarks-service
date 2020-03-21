@@ -87,7 +87,8 @@ class RunListResource(generic.View):
         run = Run(task=task,
                   nmpi_id=data["job_id"],
                   timestamp=timestamp,
-                  system=system)
+                  system=system,
+                  status=data["status"])
         run.save()
 
         for result in data["results"]:
@@ -102,7 +103,7 @@ class RunListResource(generic.View):
 
 
 def runs_by_system(request, name):
-    runs = Run.objects.filter(system__name=name)
+    runs = Run.objects.filter(system__name=name, status="finished")
     context = {
         'system_name': name,
         'runs': runs.order_by("task__name"),

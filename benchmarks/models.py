@@ -42,10 +42,20 @@ class Task(models.Model):
 
 
 class Run(models.Model):
+    status_choices = (
+        ("submitted", "submitted"),
+        ("validated", "validated"),
+        ("running", "running"),
+        ("mapped", "mapped"),
+        ("finished", "finished"),
+        ("error", "error"),
+        ("removed", "removed")
+    )
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
     nmpi_id = models.PositiveIntegerField()
     system = models.ForeignKey(System, on_delete=models.CASCADE)
+    status = models.CharField(choices=status_choices, default="submitted", blank=True, max_length=15)
 
     def __str__(self):
         return "{}/{}/{}".format(self.task, self.system, self.nmpi_id)
