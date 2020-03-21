@@ -53,7 +53,7 @@ class Run(models.Model):
     )
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
-    nmpi_id = models.PositiveIntegerField()
+    nmpi_id = models.PositiveIntegerField(unique=True)
     system = models.ForeignKey(System, on_delete=models.CASCADE)
     status = models.CharField(choices=status_choices, default="submitted", blank=True, max_length=15)
 

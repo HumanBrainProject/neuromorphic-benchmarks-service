@@ -9,6 +9,7 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.db import IntegrityError
 import dateutil.parser
 
 from .models import System, NetworkModel, Task, Measure, Run, Repository
@@ -89,17 +90,20 @@ class RunListResource(generic.View):
                   timestamp=timestamp,
                   system=system,
                   status=data["status"])
-        run.save()
-
-        for result in data["results"]:
-            try:
-                m = Measure(run=run, value=result["value"], units=result.get("units", ""),
-                            metric=result["type"], type=result["measure"], name=result["name"],
-                            std_dev=result.get("std_dev", None),
-                            min=result.get("min", None), max=result.get("max", None))
-            except KeyError as err:
-                raise ResultFormatError("Missing field in results: {}".format(err.message))
-            m.save()
+        try:
+            run.save()
+        except IntegrityError:  # if job with the same nmpi_id already exists
+            pass
+        else:
+            for result in data["results"]:
+                try:
+                    m = Measure(run=run, value=result["value"], units=result.get("units", ""),
+                                metric=result["type"], type=result["measure"], name=result["name"],
+                                std_dev=result.get("std_dev", None),
+                                min=result.get("min", None), max=result.get("max", None))
+                except KeyError as err:
+                    raise ResultFormatError("Missing field in results: {}".format(err.message))
+                m.save()
 
 
 def runs_by_system(request, name):
