@@ -10,27 +10,25 @@
 # To find out which port to access on the host machine, run "docker ps"
 #
 
-FROM debian:stretch-slim
-MAINTAINER Andrew Davison <andrew.davison@unic.cnrs-gif.fr>
+FROM debian:buster-slim
+MAINTAINER Andrew Davison <andrew.davison@cnrs.fr>
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update --fix-missing
-RUN apt-get -y -q install nginx-extras supervisor build-essential python-dev python-setuptools python-pip sqlite3 python-psycopg2
+RUN apt-get -y -q install nginx-extras supervisor build-essential python3-dev python3-setuptools python3-pip sqlite3 python3-psycopg2
 RUN unset DEBIAN_FRONTEND
 
-RUN pip install uwsgi
+RUN pip3 install uwsgi
 
 ADD . /home/docker/site
 
-RUN pip install -r /home/docker/site/deployment/requirements.txt
+RUN pip3 install -r /home/docker/site/deployment/requirements.txt
 
 WORKDIR /home/docker/site
-ENV PYTHONPATH  /home/docker:/usr/local/lib/python2.7/dist-packages
+ENV PYTHONPATH  /home/docker:/usr/local/lib/python3.7/dist-packages
 
-RUN python manage.py check
-#RUN python manage.py migrate
-#RUN python manage.py loaddata benchmarks_site/initial_data.json
-#RUN python manage.py collectstatic --noinput
+RUN python3 manage.py check
+#RUN python3 manage.py collectstatic --noinput
 RUN unset PYTHONPATH
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -40,6 +38,6 @@ RUN ln -s /home/docker/site/deployment/supervisor-app.conf /etc/supervisor/conf.
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
-ENV PYTHONPATH /usr/local/lib/python2.7/dist-packages:/usr/lib/python2.7/dist-packages
+ENV PYTHONPATH /usr/local/lib/python3.7/dist-packages:/usr/lib/python3.7/dist-packages
 EXPOSE 443
 CMD ["supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisor-app.conf"]
