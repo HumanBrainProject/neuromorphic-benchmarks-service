@@ -137,6 +137,7 @@ def measures_by_task(request, model_name, task_name):
                 },
                 'type': measure.type,    # we assume all measures with the same name have
                 'units': measure.units,  # the same units and type - should assert this
+                'identifier': measure.name.replace(" ", "_")
             }
     context = {
         "task": task,

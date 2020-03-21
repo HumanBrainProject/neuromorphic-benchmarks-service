@@ -18,8 +18,8 @@
 {% block scripts %}
 <script>
 {% for task_label, dataset in datasets.items %}
-var chart_{{task_label}} = c3.generate({
-    bindto: '#chart_{{task_label}}',
+var chart_{{dataset.identifier}} = c3.generate({
+    bindto: '#chart_{{dataset.identifier}}',
     data: {
         xFormat: '%Y-%m-%dT%H:%M',
         xs: {
