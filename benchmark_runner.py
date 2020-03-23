@@ -73,6 +73,8 @@ def run_job(repository, task, platform, wait_for_results=True):
     config = {}
     if "config" in task:
         config.update(task["config"].get(platform, {}))
+    if "{system}" in task["command"]:  # temporary fix since BrainScaleS is not handling the '{system}' placeholder
+        task["command"] = task["command"].replace("{system}", queue_name.lower())
     job = job_manager.submit_job(
                         source=repository,
                         command=task["command"],
