@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^by-task/(?P<model_name>\w[\w -]*)/(?P<task_name>\w[\w -\/]*)/$', views.measures_by_task, name='measures-by-task'),
     url(r'^runs/$', views.RunListResource.as_view(), name='runs'),
     url(r'^latest/$', views.latest, name='latest'),
-    url(r'^documentation/$', views.documentation, name='documentation')
+    url(r'^documentation/$', views.documentation, name='documentation'),
+    url(r'^trigger/$', views.trigger, name='webhook'),
 ]

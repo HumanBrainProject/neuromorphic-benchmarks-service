@@ -17,9 +17,12 @@ except ImportError:
 import json
 import tempfile
 import shutil
+from datetime import datetime, timedelta
 from sh import git
 import nmpi
 import requests
+import dateparser
+
 
 BENCHMARKS_SERVER = "https://benchmarks.hbpneuromorphic.eu"
 BENCHMARKS_COLLAB = "510"
@@ -126,12 +129,17 @@ def save_results(model_name, task_name, results, job, platform):
     if response.status_code in (200, 201):
         print(response)
     else:
-        raise Exception(response.text)
+        #raise Exception(response.text)
+        print("Error: {}".format(response.text))
 
 
-def check_for_finished_runs():
+def check_for_finished_runs(max_age=1):
     for job in job_manager.completed_jobs(BENCHMARKS_COLLAB, verbose=True):
-        if job["status"] == "finished" and job['timestamp_completion'] > '2019': # todo: only look at jobs within past 1 week or 1 day
+        if job.get('timestamp_completion') is not None:
+            job_age = datetime.now().astimezone() - dateparser.parse(job['timestamp_completion'])
+        else:
+            job_age = timedelta(days=365000)
+        if job["status"] == "finished" and job_age < timedelta(days=max_age):
             full_job = job_manager.get_job(job["id"])
             results = get_results(full_job)
             if results:
@@ -146,4 +154,4 @@ if __name__ == "__main__":
         main("SpiNNaker", wait_for_results=False)
         main("BrainScaleS", wait_for_results=False)
     elif sys.argv[1] == "check":
-        check_for_finished_runs()
+        check_for_finished_runs(max_age=1)

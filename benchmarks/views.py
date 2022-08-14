@@ -2,17 +2,25 @@ from collections import defaultdict
 from pprint import pprint
 import json
 from datetime import datetime
+import hmac
+from hashlib import sha1
 import pytz
 import logging
 from django.shortcuts import render
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseForbidden, HttpResponseServerError)
+from django.conf import settings
+from django.utils.encoding import force_bytes
 from django.db import IntegrityError
 import dateutil.parser
+from ipaddress import ip_address, ip_network
 
 from .models import System, NetworkModel, Task, Measure, Run, Repository
+
 
 cest = pytz.timezone("Europe/Amsterdam")
 logger = logging.getLogger("benchmarks")
@@ -199,3 +207,50 @@ def home(request):
 def documentation(request):
     context = {"navigation": "documentation"}
     return render(request, 'documentation.html', context)
+
+
+@require_POST
+@csrf_exempt
+def trigger(request):
+    """Webhook for signalling updates to benchmark code or to deployed neuromorphic systems"""
+    # based on https://simpleisbetterthancomplex.com/tutorial/2016/10/31/how-to-handle-github-webhooks-using-django.html
+
+    # Verify if request came from GitHub
+    # todo: extend whitelist to accept pings from Bielefeld, Manchester, Heidelberg
+    forwarded_for = u'{}'.format(request.META.get('HTTP_X_FORWARDED_FOR'))
+    client_ip_address = ip_address(forwarded_for)
+    whitelist = requests.get('https://api.github.com/meta').json()['hooks']
+
+    for valid_ip in whitelist:
+        if client_ip_address in ip_network(valid_ip):
+            break
+    else:
+        return HttpResponseForbidden('Permission denied.')
+
+    # Verify the request signature
+    header_signature = request.META.get('HTTP_X_HUB_SIGNATURE')
+    if header_signature is None:
+        return HttpResponseForbidden('Permission denied.')
+
+    sha_name, signature = header_signature.split('=')
+    if sha_name != 'sha1':
+        return HttpResponseServerError('Operation not supported.', status=501)
+
+    mac = hmac.new(force_bytes(settings.WEBHOOK_KEY), msg=force_bytes(request.body), digestmod=sha1)
+    if not hmac.compare_digest(force_bytes(mac.hexdigest()), force_bytes(signature)):
+        return HttpResponseForbidden('Permission denied.')
+
+    # Process the GitHub events
+    event = request.META.get('HTTP_X_GITHUB_EVENT', 'ping')
+
+    if event == 'ping':
+        return HttpResponse('pong')
+    elif event == 'push':
+        # Deploy some code for example
+        data = json.loads(request.body)
+        logger.info("Webhook triggered: new code in {}@{}".format(
+            data["repository"]["url"], data["ref"]))
+        return HttpResponse('success')
+
+    # In case we receive an event that's not ping or push
+    return HttpResponse(status=204)
